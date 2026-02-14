@@ -1,0 +1,66 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// ── Student Profile ────────────────────────────────────────────────
+model Student {
+    id        String   @id @default(uuid())
+    email     String   @unique
+    name      String
+    avatarUrl String?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    results  ExamResult[]
+    sessions TestSession[]
+
+    @@index([email])
+}
+
+// ── Exam Results ───────────────────────────────────────────────────
+model ExamResult {
+    id             String   @id @default(uuid())
+    studentId      String
+    testTitle      String
+    score          Int
+    totalQuestions Int
+    percentage     Float
+    completedAt    DateTime @default(now())
+
+    student Student @relation(fields: [studentId], references: [id])
+
+    @@index([studentId])
+    @@index([completedAt])
+}
+
+// ── Active Test Sessions ───────────────────────────────────────────
+model TestSession {
+    id        String   @id @default(uuid())
+    studentId String
+    testTitle String
+    startedAt DateTime @default(now())
+    status    String   @default("active") // active | completed | abandoned
+
+    student Student @relation(fields: [studentId], references: [id])
+
+    @@index([studentId])
+    @@index([status])
+}
+
+// ── Upcoming Scheduled Tests ───────────────────────────────────────
+model ScheduledTest {
+    id          String   @id @default(uuid())
+    title       String
+    description String?
+    scheduledAt DateTime
+    isActive    Boolean  @default(true)
+    createdAt   DateTime @default(now())
+
+    @@index([scheduledAt])
+    @@index([isActive])
+}

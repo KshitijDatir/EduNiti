@@ -1,0 +1,144 @@
+# ──────────────────────────────────────────────────────────────────
+# XENIA — Docker Compose (Local Development)
+#
+# Services:
+#   nginx           → Reverse proxy (port 80)
+#   auth-service    → Auth stub (port 3001)
+#   dashboard       → Dashboard stub (port 3002)
+#   test-service    → Your microservice (port 3003)
+#   postgres        → PostgreSQL 16
+#   redis           → Redis 7 (standalone for local dev)
+#
+# Usage:
+#   docker-compose up --build
+#   docker-compose exec test-service npx prisma migrate deploy
+#   docker-compose exec test-service npx prisma db seed
+# ──────────────────────────────────────────────────────────────────
+
+services:
+  # ── Reverse Proxy ──────────────────────────────────────────────
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      auth-service:
+        condition: service_healthy
+      dashboard-service:
+        condition: service_healthy
+      test-service:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Auth Service ─────────────────────────────────────────────────
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "3001"
+      NODE_ENV: "development"
+      DATABASE_URL: "postgresql://xenia:xenia_secret@postgres:5432/xenia_auth?schema=public"
+      JWT_SECRET: "dev-secret-change-in-production"
+      JWT_EXPIRES_IN: "24h"
+      CORS_ORIGIN: "http://localhost:5173,http://localhost"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:3001/api/auth/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    restart: unless-stopped
+
+  # ── Dashboard Service ────────────────────────────────────────────
+  dashboard-service:
+    build:
+      context: ./services/dashboard-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "3002"
+      NODE_ENV: "development"
+      DATABASE_URL: "postgresql://xenia:xenia_secret@postgres:5432/xenia_dashboard?schema=public"
+      JWT_SECRET: "dev-secret-change-in-production"
+      CORS_ORIGIN: "http://localhost:5173,http://localhost"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:3002/api/student/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    restart: unless-stopped
+
+  # ── Test Service (Your Microservice) ───────────────────────────
+  test-service:
+    build:
+      context: ./services/test-service
+      dockerfile: Dockerfile
+    environment:
+      PORT: "3003"
+      NODE_ENV: "development"
+      DATABASE_URL: "postgresql://xenia:xenia_secret@postgres:5432/xenia_tests?schema=public"
+      REDIS_MODE: "standalone"
+      REDIS_URL: "redis://redis:6379"
+      JWT_SECRET: "dev-secret-change-in-production"
+      CACHE_TEST_TTL: "600"
+      CACHE_TEST_META_TTL: "1800"
+      CORS_ORIGIN: "http://localhost:5173,http://localhost"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "wget", "-qO-", "http://localhost:3003/api/test/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 45s
+    restart: unless-stopped
+
+  # ── PostgreSQL ─────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: xenia
+      POSTGRES_PASSWORD: xenia_secret
+      POSTGRES_DB: xenia_tests
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init-databases.sh:/docker-entrypoint-initdb.d/init-databases.sh
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U xenia -d xenia_tests" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # ── Redis ──────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
