@@ -1,4 +1,3 @@
-# EduNiti
 
 A scalable learning platform built with a modern microservices architecture, designed for high performance and reliability.
 

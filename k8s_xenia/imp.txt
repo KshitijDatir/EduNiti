@@ -1,0 +1,79 @@
+kubectl exec -it rabbitmq-c498c6ccb-xr9r8 -- rabbitmqctl list_queues
+kubectl top nodes
+    hey -n 20000 -c 200 \
+    -m POST \
+    -H "Content-Type: application/json" \
+    -d '{"data":"test"}' \
+    http://192.168.49.2/submit
+kubectl get hpa 
+ kubectl delete pod -n kube-system -l k8s-app=metrics-server
+ minikube addons enable metrics-server
+ eval $(minikube docker-env)
+
+
+
+
+
+
+
+base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl top pods
+NAME                        CPU(cores)   MEMORY(bytes)   
+api-779588fc69-6fxtl        1m           20Mi            
+api-779588fc69-8kt4t        1m           20Mi            
+rabbitmq-6b765cd6ff-s4fnm   16m          181Mi           
+worker-6ddd57d79d-7dkff     297m         20Mi            
+worker-6ddd57d79d-kfl8f     292m         17Mi            
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl exec -it kubectl exec -it rabbitmq-6b765cd6ff-s4fnm -- rabbitmqctl list_queues -- rabbitmqctl list_queues
+Error from server (NotFound): pods "kubectl" not found
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl exec -it rabbitmq-6b765cd6ff-s4fnm -- rabbitmqctl list_
+queues
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name    messages
+submit_queue    13975
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubect top pods
+Command 'kubect' not found, did you mean:
+  command 'kubectx' from deb kubectx (0.9.5-1ubuntu0.4)
+Try: sudo apt install <deb name>
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl top pods
+NAME                        CPU(cores)   MEMORY(bytes)   
+api-779588fc69-6fxtl        1m           20Mi            
+api-779588fc69-8kt4t        1m           20Mi            
+rabbitmq-6b765cd6ff-s4fnm   12m          182Mi           
+worker-5cc7979d44-2ztnl     200m         15Mi            
+worker-5cc7979d44-5qmck     300m         18Mi            
+worker-5cc7979d44-j72hd     200m         15Mi            
+worker-5cc7979d44-p2k5c     301m         17Mi            
+worker-5cc7979d44-vbns4     300m         17Mi            
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl get pods
+NAME                        READY   STATUS    RESTARTS      AGE
+api-779588fc69-6fxtl        1/1     Running   0             178m
+api-779588fc69-8kt4t        1/1     Running   0             178m
+rabbitmq-6b765cd6ff-s4fnm   1/1     Running   0             178m
+worker-5cc7979d44-2ztnl     1/1     Running   0             114s
+worker-5cc7979d44-5qmck     1/1     Running   0             114s
+worker-5cc7979d44-5whq4     1/1     Running   0             36s
+worker-5cc7979d44-j72hd     1/1     Running   0             114s
+worker-5cc7979d44-ksf7v     1/1     Running   0             36s
+worker-5cc7979d44-p2k5c     1/1     Running   1 (40s ago)   115s
+worker-5cc7979d44-p6d8w     1/1     Running   0             36s
+worker-5cc7979d44-vbns4     1/1     Running   1 (14s ago)   115s
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl exec -it kubectl exec -it rabbitmq-6b765cd6ff-s4fnm -- rabbitmqctl list_queues -- rabbitmqctl list_queues
+Error from server (NotFound): pods "kubectl" not found
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl exec -it rabbitmq-6b765cd6ff-s4fnm -- rabbitmqctl list_queues
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name    messages
+submit_queue    6020
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl exec -it rabbitmq-6b765cd6ff-s4fnm -- rabbitmqctl list_queues
+Timeout: 60.0 seconds ...
+Listing queues for vhost / ...
+name    messages
+submit_queue    0
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl get pods
+NAME                        READY   STATUS    RESTARTS      AGE
+api-779588fc69-6fxtl        1/1     Running   0             3h11m
+api-779588fc69-8kt4t        1/1     Running   0             3h11m
+rabbitmq-6b765cd6ff-s4fnm   1/1     Running   0             3h11m
+worker-5cc7979d44-j72hd     1/1     Running   1 (12m ago)   14m
+(base) rohit@rohit-Nitro-AN515-44:~/Desktop/eduniti/worker$ kubectl exec -it rabbitmq-6b765cd6ff-s4fnm -- rabbitmqctl list_queues
