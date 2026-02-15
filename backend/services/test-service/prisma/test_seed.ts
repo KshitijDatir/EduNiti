@@ -25,6 +25,18 @@ async function main() {
                             ],
                         },
                     },
+                    {
+                        questionText: 'Watch this second video and answer:',
+                        mediaUrl: 'https://d1mh8twbagv3j5.cloudfront.net/.mp4',
+                        mediaType: 'video',
+                        sortOrder: 2,
+                        options: {
+                            create: [
+                                { text: 'Option A', isCorrect: false, sortOrder: 1 },
+                                { text: 'Option B', isCorrect: true, sortOrder: 2 },
+                            ],
+                        },
+                    },
                 ],
             },
         },

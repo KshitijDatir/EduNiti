@@ -51,4 +51,6 @@ export const tests = {
     getById: (testId) => request(`/test/${testId}`),
     submit: (testId, answers) =>
         request(`/test/${testId}/submit`, { method: 'POST', body: JSON.stringify({ answers }) }),
+    cacheStats: () => request('/test/cache/stats'),
+    cacheReset: () => request('/test/cache/reset', { method: 'POST' }),
 };

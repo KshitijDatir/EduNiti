@@ -24,6 +24,7 @@ export default function Navbar() {
                             <Link to="/videos">Videos</Link>
                             <Link to="/results">Results</Link>
                             <Link to="/loadtest">Load Test</Link>
+                            <Link to="/redis">Redis</Link>
                         </div>
                         <div className="navbar-user">
                             <span className="user-name">{user?.name || 'Student'}</span>

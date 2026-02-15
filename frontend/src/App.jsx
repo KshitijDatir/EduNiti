@@ -11,6 +11,7 @@ import VideosPage from './pages/VideosPage';
 import VideoPlayerPage from './pages/VideoPlayerPage';
 import ResultsPage from './pages/ResultsPage';
 import LoadTestPage from './pages/LoadTestPage';
+import RedisPage from './pages/RedisPage';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/videos/:questionId" element={<ProtectedRoute><VideoPlayerPage /></ProtectedRoute>} />
           <Route path="/results" element={<ProtectedRoute><ResultsPage /></ProtectedRoute>} />
           <Route path="/loadtest" element={<ProtectedRoute><LoadTestPage /></ProtectedRoute>} />
+          <Route path="/redis" element={<ProtectedRoute><RedisPage /></ProtectedRoute>} />
 
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Routes>

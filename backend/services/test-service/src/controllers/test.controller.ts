@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { testIdSchema } from '../validation/test.validation.js';
 import { getTestById, getLiveTest } from '../services/test.service.js';
 import { createError } from '../middleware/errorHandler.js';
+import { getCacheStats, resetCacheCounters } from '../cache/testCache.js';
 
 /**
  * GET /api/test/live
@@ -79,3 +80,26 @@ export function healthCheck(_req: Request, res: Response): void {
     });
 }
 
+/**
+ * GET /api/test/cache/stats
+ *
+ * Returns real-time Redis cache statistics.
+ */
+export async function getCacheStatsHandler(_req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+        const stats = await getCacheStats();
+        res.json({ data: stats });
+    } catch (err) {
+        next(err);
+    }
+}
+
+/**
+ * POST /api/test/cache/reset
+ *
+ * Resets app-level cache counters (for demo purposes).
+ */
+export function resetCacheStatsHandler(_req: Request, res: Response): void {
+    resetCacheCounters();
+    res.json({ message: 'Cache counters reset' });
+}

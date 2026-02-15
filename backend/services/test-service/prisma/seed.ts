@@ -217,7 +217,7 @@ async function main() {
                     },
                     {
                         questionText: 'Introduction to Neural Networks — Video Lecture',
-                        mediaUrl: null, // Video not yet uploaded to CDN
+                        mediaUrl: 'https://d1mh8twbagv3j5.cloudfront.net/101-intro.mp4',
                         mediaType: 'video',
                         sortOrder: 2,
                         options: {
