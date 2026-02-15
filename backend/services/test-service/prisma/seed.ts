@@ -196,20 +196,50 @@ async function main() {
     // ── Test 4: Multimedia Test (CDN Integration) ─────────────────────
     const mediaTest = await prisma.test.create({
         data: {
-            title: 'Multimedia Capabilities',
+            title: 'Video Learning Module',
             scheduledAt: new Date(), // Available now
             isActive: true,
             questions: {
                 create: [
                     {
-                        questionText: 'Analyze the following video content:',
+                        questionText: 'Watch this project demo and answer: What technology is being showcased?',
                         mediaUrl: 'https://d1mh8twbagv3j5.cloudfront.net/argo_final.mp4',
                         mediaType: 'video',
                         sortOrder: 1,
                         options: {
                             create: [
-                                { text: 'Option A', isCorrect: true, sortOrder: 1 },
-                                { text: 'Option B', isCorrect: false, sortOrder: 2 },
+                                { text: 'Machine Learning Pipeline', isCorrect: false, sortOrder: 1 },
+                                { text: 'CI/CD Deployment with Argo', isCorrect: true, sortOrder: 2 },
+                                { text: 'Database Migration', isCorrect: false, sortOrder: 3 },
+                                { text: 'Frontend Testing', isCorrect: false, sortOrder: 4 },
+                            ],
+                        },
+                    },
+                    {
+                        questionText: 'Introduction to Neural Networks — Video Lecture',
+                        mediaUrl: null, // Video not yet uploaded to CDN
+                        mediaType: 'video',
+                        sortOrder: 2,
+                        options: {
+                            create: [
+                                { text: 'Perceptron', isCorrect: true, sortOrder: 1 },
+                                { text: 'Decision Tree', isCorrect: false, sortOrder: 2 },
+                                { text: 'Linear Regression', isCorrect: false, sortOrder: 3 },
+                                { text: 'K-Means', isCorrect: false, sortOrder: 4 },
+                            ],
+                        },
+                    },
+                    {
+                        questionText: 'Data Structures Walkthrough — Video Tutorial',
+                        mediaUrl: null, // Video not yet uploaded to CDN
+                        mediaType: 'video',
+                        sortOrder: 3,
+                        options: {
+                            create: [
+                                { text: 'Stack', isCorrect: false, sortOrder: 1 },
+                                { text: 'Queue', isCorrect: false, sortOrder: 2 },
+                                { text: 'Binary Tree', isCorrect: true, sortOrder: 3 },
+                                { text: 'Hash Map', isCorrect: false, sortOrder: 4 },
                             ],
                         },
                     },
@@ -218,11 +248,11 @@ async function main() {
         },
     });
 
-    console.log(`✅ Seeded 3 tests:`);
+    console.log(`✅ Seeded 4 tests:`);
     console.log(`   - ${jsTest.title} (${jsTest.id})`);
     console.log(`   - ${dsTest.title} (${dsTest.id})`);
     console.log(`   - ${reactTest.title} (${reactTest.id})`);
-    console.log(`   - ${mediaTest.title} (${mediaTest.id})`);
+    console.log(`   - ${mediaTest.title} (${mediaTest.id}) — 3 video questions`);
 }
 
 main()

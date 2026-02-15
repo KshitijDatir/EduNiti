@@ -1,21 +1,33 @@
 import { Request, Response, NextFunction } from 'express';
 import { testIdSchema } from '../validation/test.validation.js';
-import { getTestById } from '../services/test.service.js';
+import { getTestById, getLiveTest } from '../services/test.service.js';
 import { createError } from '../middleware/errorHandler.js';
+
+/**
+ * GET /api/test/live
+ *
+ * Returns the currently live test summary.
+ */
+export async function getLive(_req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+        const liveTest = await getLiveTest();
+
+        if (!liveTest) {
+            res.status(404).json({ message: 'No live test available right now' });
+            return;
+        }
+
+        res.json({ data: liveTest });
+    } catch (err) {
+        next(err);
+    }
+}
 
 /**
  * GET /api/test/:testId
  *
  * Returns test details with questions and options.
  * Uses Redis cache with DB fallback.
- * Response matches BACKEND_INTEGRATION.md contract:
- * {
- *   "data": {
- *     "id": "string",
- *     "title": "string",
- *     "questions": [{ "id", "questionText", "options": [{ "id", "text" }] }]
- *   }
- * }
  */
 export async function getTest(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -43,6 +55,18 @@ export async function getTest(req: Request, res: Response, next: NextFunction): 
 }
 
 /**
+ * POST /api/test/:testId/submit
+ *
+ * Stub endpoint — submission processing is not yet implemented.
+ */
+export async function submitTest(_req: Request, res: Response): Promise<void> {
+    res.status(501).json({
+        message: 'Submission endpoint coming soon',
+        status: 'not_implemented',
+    });
+}
+
+/**
  * GET /api/test/health
  *
  * Health check endpoint for load balancer / K8s probes.
@@ -54,3 +78,4 @@ export function healthCheck(_req: Request, res: Response): void {
         timestamp: new Date().toISOString(),
     });
 }
+

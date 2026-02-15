@@ -1,0 +1,80 @@
+.videos-header {
+    margin-bottom: 32px;
+}
+
+.videos-header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+
+.videos-header p {
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+.videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.video-card {
+    overflow: hidden;
+}
+
+.video-thumbnail {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    font-size: 2.5rem;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.video-card:hover .play-overlay {
+    opacity: 1;
+}
+
+.no-video {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted);
+    gap: 8px;
+}
+
+.no-video span {
+    font-size: 2rem;
+}
+
+.no-video small {
+    font-size: 0.8rem;
+}
+
+.video-info h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 10px;
+}
+
+.video-meta {
+    display: flex;
+    gap: 8px;
+}

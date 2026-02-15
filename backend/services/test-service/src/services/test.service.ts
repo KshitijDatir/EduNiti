@@ -7,8 +7,17 @@ export interface TestResponse {
     questions: {
         id: string;
         questionText: string;
+        mediaUrl?: string | null;
+        mediaType?: string | null;
         options: { id: string; text: string }[];
     }[];
+}
+
+export interface TestSummary {
+    id: string;
+    title: string;
+    questionCount: number;
+    scheduledAt: Date | null;
 }
 
 /**
@@ -35,6 +44,8 @@ export async function getTestById(testId: string): Promise<TestResponse | null> 
                 select: {
                     id: true,
                     questionText: true,
+                    mediaUrl: true,
+                    mediaType: true,
                     options: {
                         select: {
                             id: true,
@@ -58,6 +69,8 @@ export async function getTestById(testId: string): Promise<TestResponse | null> 
         questions: test.questions.map((q) => ({
             id: q.id,
             questionText: q.questionText,
+            mediaUrl: q.mediaUrl,
+            mediaType: q.mediaType,
             options: q.options.map((o) => ({
                 id: o.id,
                 text: o.text,
@@ -70,3 +83,33 @@ export async function getTestById(testId: string): Promise<TestResponse | null> 
 
     return response;
 }
+
+/**
+ * Get the currently live test (most recent active test whose scheduledAt <= now).
+ * Returns a summary (not full questions) for the listing page.
+ */
+export async function getLiveTest(): Promise<TestSummary | null> {
+    const test = await prisma.test.findFirst({
+        where: {
+            isActive: true,
+            scheduledAt: { lte: new Date() },
+        },
+        orderBy: { scheduledAt: 'desc' },
+        select: {
+            id: true,
+            title: true,
+            scheduledAt: true,
+            _count: { select: { questions: true } },
+        },
+    });
+
+    if (!test) return null;
+
+    return {
+        id: test.id,
+        title: test.title,
+        questionCount: test._count.questions,
+        scheduledAt: test.scheduledAt,
+    };
+}
+

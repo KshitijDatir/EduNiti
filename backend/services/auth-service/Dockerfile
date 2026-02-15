@@ -20,8 +20,8 @@ RUN npm run build
 # ── Runner ───────────────────────────────────────────────────────
 FROM node:20-slim AS runner
 
-# Install OpenSSL (required for Prisma on Debian slim)
-RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+# Install OpenSSL and curl (required for Prisma and healthcheck on Debian slim)
+RUN apt-get update -y && apt-get install -y openssl curl && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -55,6 +55,6 @@ RUN npm install -g tsx
 EXPOSE 3001
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s \
-  CMD wget -qO- http://localhost:3001/api/auth/health || exit 1
+  CMD curl -f http://localhost:3001/api/auth/health || exit 1
 
 CMD ["./entrypoint.sh"]
